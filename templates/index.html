@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>TP TensorFlow</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #f4f4f4;
+        }
+
+        .bloc {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #1976d2;
+            color: white;
+        }
+
+        img {
+            width: 100px;
+        }
+
+        .supprimer {
+            color: red;
+            font-weight: bold;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>TP TensorFlow / MongoDB</h1>
+    <h2>Reconnaissance simple d'image</h2>
+
+    <div class="bloc">
+        <h3>Envoyer une image</h3>
+
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="image" accept="image/*" required>
+            <button type="submit">Analyser</button>
+        </form>
+    </div>
+
+    {% if resultat %}
+    <div class="bloc">
+        <h3>Résultat de l'analyse</h3>
+
+        <p><strong>Nom de l'image :</strong> {{ resultat.nom_image }}</p>
+        <p><strong>Prédiction TensorFlow :</strong> {{ resultat.analyse.prediction_originale }}</p>
+        <p><strong>Type reconnu :</strong> {{ resultat.analyse.type_reconnu }}</p>
+        <p><strong>Taux de réussite :</strong> {{ resultat.analyse.taux_reussite }} %</p>
+        <p><strong>Badge :</strong> {{ resultat.analyse.badge }}</p>
+
+        <img src="{{ resultat.chemin_image }}" alt="image analysée">
+    </div>
+    {% endif %}
+
+    <div class="bloc">
+        <h3>Historique des analyses</h3>
+
+        <table>
+            <tr>
+                <th>Date</th>
+                <th>Image</th>
+                <th>Nom</th>
+                <th>Taille</th>
+                <th>Prédiction</th>
+                <th>Type reconnu</th>
+                <th>Taux</th>
+                <th>Badge</th>
+                <th>Action</th>
+            </tr>
+
+            {% for item in historiques %}
+            <tr>
+                <td>{{ item.date }}</td>
+                <td><img src="{{ item.chemin_image }}" alt="image"></td>
+                <td>{{ item.nom_image }}</td>
+                <td>{{ item.taille_octets }} octets</td>
+                <td>{{ item.analyse.prediction_originale }}</td>
+                <td>{{ item.analyse.type_reconnu }}</td>
+                <td>{{ item.analyse.taux_reussite }} %</td>
+                <td>{{ item.analyse.badge }}</td>
+                <td>
+                    <a class="supprimer" href="/supprimer/{{ item._id }}">
+                        Supprimer
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</body>
+</html>
